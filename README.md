@@ -16,6 +16,12 @@ This project demonstrates how to implement basic cryptographic concepts using Ru
 ```bash
 cargo build --release
 ```
+## Installation
+Clone the repository and navigate to the project directory:
+```sh
+clone git https://github.com/cypriansakwa/ChaCha20Poly1305_File_Encryption_with_Key_Written_to_Disk.git
+cd ChaCha20Poly1305_File_Encryption_with_Key_Written_to_Disk
+```
 ## Run the example:
 ```bash
 cargo run
