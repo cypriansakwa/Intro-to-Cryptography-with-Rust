@@ -1,0 +1,156 @@
+\documentclass{beamer}
+\usetheme{Madrid}
+\title{Intro to Cryptography with Rust}
+%\subtitle{Made Simple for First-Time Learners}
+\author{Dr. Cyprian Omukhwaya Sakwa}
+\date{\today}
+
+\begin{document}
+	
+	\begin{frame}[t]
+		\titlepage
+	\end{frame}
+	
+	% Slide 1: What is Cryptography?
+	\begin{frame}[t]{What is Cryptography?}
+		\begin{itemize}
+			\item Cryptography is about \textbf{hiding and protecting information}.
+			\item You use it every day – when using WhatsApp, visiting a secure website, or making crypto payments.
+			\item Cryptography makes sure:
+			\begin{itemize}
+				\item Only the right people can read a message (called \textbf{confidentiality}).
+				\item You can check if a message was changed (called \textbf{integrity}).
+				\item You know who sent the message (\textbf{authentication}).
+			\end{itemize}
+			\item It’s like sending a secret message in a locked box – and only the person with the key can open it.
+		\end{itemize}
+	\end{frame}
+	
+	% Slide 2: Why Rust for Cryptography? (Simple version)
+	\begin{frame}[t]{Why Use Rust for Cryptography?}
+		\begin{itemize}
+			\item Rust is a programming language designed for \textbf{safety and speed}.
+			\item When writing cryptography, you want to avoid mistakes like:
+			\begin{itemize}
+				\item Reading memory you shouldn't read.
+				\item Crashing because of bugs.
+			\end{itemize}
+			\item Rust helps avoid these errors at \textbf{compile time}, before the program runs.
+			\item It’s fast like C++, but much safer.
+		\end{itemize}
+	\end{frame}
+	
+	% Slide 3: Rust Makes Crypto Safer
+	\begin{frame}[t]{Rust Makes Crypto Safer}
+		\begin{itemize}
+			\item Rust checks for errors while you write code. This is important in cryptography where a small mistake can be dangerous.
+			\item It helps you write code that uses multiple CPU cores safely, which is good for speeding up encryption or decryption.
+			\item Rust doesn’t use a garbage collector, so your programs run fast and predictably.
+		\end{itemize}
+	\end{frame}
+	
+	% Slide 4: Real Cryptography in Rust
+	\begin{frame}[t]{Real Cryptography in Rust}
+		\begin{itemize}
+			\item Rust already has great tools (libraries) for doing crypto:
+			\begin{itemize}
+				\item \texttt{rustls} – secure websites without needing OpenSSL.
+				\item \texttt{curve25519-dalek} – encryption with modern elliptic curves.
+				\item \texttt{tfhe-rs} – compute on encrypted data (homomorphic encryption).
+				\item \texttt{pqcrypto} – future-proof crypto that even resists quantum computers.
+			\end{itemize}
+			\item These libraries are built with Rust’s safety and performance in mind.
+		\end{itemize}
+	\end{frame}
+	
+	% Slide 5: A Simple Example – Encrypting with Rust
+	\begin{frame}[t]{A Simple Example – Encrypting a Message}
+		\textbf{Encrypt a secret message in just a few lines of Rust:}
+		\vspace{0.5em}
+		\texttt{\small
+			\begin{tabbing}
+				\hspace{1em}\= use chacha20poly1305::{ChaCha20Poly1305, aead::*}; \\
+				\> let key = ChaCha20Poly1305::generate\_key(\&mut OsRng); \\
+				\> let cipher = ChaCha20Poly1305::new(\&key); \\
+				\> let nonce = ChaCha20Poly1305::generate\_nonce(\&mut OsRng); \\
+				\> let ciphertext = cipher.encrypt(\&nonce, b"top secret".as\_ref())?;
+			\end{tabbing}
+		}
+		
+		
+		
+		\vspace{0.5em}
+		This encrypts the message \texttt{"top secret"} so no one else can read it.
+		
+		\textbf{Note:} Don’t reuse the same key and nonce!
+		
+		
+	\end{frame}
+	\begin{frame}[t]{What is a Nonce?}
+		\begin{itemize}
+			\item A \textbf{nonce} stands for “\textit{number used once}”.
+			\item It is a unique value (usually random or a counter) used only once per encryption operation.
+			\item Ensures that even if you encrypt the same message twice, you get different outputs.
+			\item \textbf{Purpose:} Prevent replay attacks and ensure message uniqueness.
+		\end{itemize}
+		\textbf{Warning:} Reusing a nonce with the same key can \textcolor{red}{break encryption security!}
+		
+	\end{frame}
+	\begin{frame}[t]{What This Code Does}
+		\begin{itemize}
+			\item Uses \texttt{ChaCha20-Poly1305}, a fast and secure AEAD cipher.
+			\item Generates a random key and nonce with \texttt{OsRng}.
+			\item Encrypts a plaintext message in memory.
+			\item Immediately decrypts it using the same key and nonce.
+			\item Prints the ciphertext (in hex) and recovered plaintext.
+		\end{itemize}
+	\end{frame}
+\begin{frame}[t]{What Does "Encrypts a Message in Memory" Mean?}
+		\textbf{``Encrypts a plaintext message in memory''} means that the encryption happens entirely inside your program's RAM, not involving files, databases, or network transmission.
+		
+		\vspace{0.3em}
+		\textbf{\underline{Breakdown:}}
+		\begin{itemize}
+			\item \textbf{Plaintext:} A message like \texttt{b"Confidential data goes here."} is stored in a variable.
+			\item \textbf{Key and nonce:} Are also generated and stored in memory (using \texttt{OsRng}).
+			\item \textbf{Encryption:} The cipher takes the plaintext and nonce, and returns the ciphertext—all within the running program.
+			\item \textbf{No files involved:} The data is not read from or written to disk — it's just variables in the program.
+			\item \textbf{Temporary:} Once the program ends, all of it (key, nonce, plaintext, ciphertext) disappears unless you explicitly save it.
+		\end{itemize}
+	\end{frame}
+	% Slide 2
+	\begin{frame}[t]{Who Runs This Code?}
+		\begin{itemize}
+			\item As written, it is run by someone who has access to:
+			\begin{itemize}
+				\item The plaintext
+				\item The secret key
+			\end{itemize}
+			\item Meant for:
+			\begin{itemize}
+				\item Local encryption/decryption
+				\item Testing and learning the algorithm
+			\end{itemize}
+		\end{itemize}
+	\end{frame}
+	
+	% Slide 3
+	\begin{frame}[t]{Production Use: Split Responsibilities}
+		\textbf{In a real-world application, you would split this into two roles:}
+		\vspace{0.5em}
+		\begin{block}{Encryptor (Sender)}
+			\begin{itemize}
+				\item Generates a key (or derives from password)
+				\item Encrypts plaintext using a secure nonce
+				\item Outputs or transmits: \texttt{nonce || ciphertext}
+			\end{itemize}
+		\end{block}
+		\begin{block}{Decryptor (Receiver)}
+			\begin{itemize}
+				\item Has the key (or derives it)
+				\item Receives the ciphertext and nonce
+				\item Decrypts to recover the original plaintext
+			\end{itemize}
+		\end{block}
+	\end{frame}
+\end{document}
