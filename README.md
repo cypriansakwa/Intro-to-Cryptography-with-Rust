@@ -10,8 +10,8 @@ This project demonstrates how to implement basic cryptographic concepts using Ru
 ## Setup
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/cryptography-with-rust.git
-   cd cryptography-with-rust
+   git clone https://github.com/yourusername/Intro-to-Cryptography-with-Rust.git
+   cd Intro-to-Cryptography-with-Rust
 ## Build the project:
 ```bash
 cargo build --release
